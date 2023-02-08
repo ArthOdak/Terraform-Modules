@@ -36,12 +36,12 @@ resource "aws_iam_role_policy" "rule" {
   })
 }
 */
-resource "aws_vpc" "main" {
+resource "aws_vpc" "main1" {
   cidr_block = "10.0.0.0/16"
 }
 
 resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
+  vpc_id     = aws_vpc.main1.id
   cidr_block = "10.0.1.0/24"
   map_public_ip_on_launch = true
   #enable_dns64 = true
@@ -51,17 +51,17 @@ resource "aws_subnet" "main" {
 }
 
 resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main1.id
 
   tags = {
     Name = "main"
   }
 }
 
-resource "aws_security_group" "sec" {
+resource "aws_security_group" "sec1" {
   name        = "sec-grp"
   description = "sec-grp"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = aws_vpc.main1.id
 
   ingress {
     description = "HTTPS"
@@ -95,15 +95,15 @@ resource "aws_security_group" "sec" {
   }
 }
 
-resource "aws_instance" "habibi" {
+resource "aws_instance" "bigboss" {
   #count           = var.environment == "prod" ? 1 : 0
   #for_each      = aws_subnet.main.id
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   subnet_id        = "${aws_subnet.main.id}"
   #security_groups = [aws_security_group.sec.name]
-  vpc_security_group_ids = ["${aws_security_group.sec.id}"]
-  iam_instance_profile = aws_iam_instance_profile.chaand.name
+  vpc_security_group_ids = ["${aws_security_group.sec1.id}"]
+  //iam_instance_profile = aws_iam_instance_profile.chaand.name
   /*
   depends_on = [
     aws_iam_role_policy.rule
