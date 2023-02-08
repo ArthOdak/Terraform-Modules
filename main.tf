@@ -110,7 +110,7 @@ resource "aws_instance" "bigboss" {
   ]
   */
   tags = {
-    name = "ec2 "//${count.index}"
+    name = var.name //${count.index}"
   }
 }
 
